@@ -1,0 +1,63 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-button>
+                <ion-icon name="menu-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title class="ion-text-center ">
+            Accounts
+        </ion-title>
+        <ion-buttons slot="primary">
+            <ion-button>
+                <img src={{url}}>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-toolbar color="primary ">
+        <ion-searchbar [(ngModel)]="searchKey" color="light " showClearButton="never " inputmode="numeric " mode="ios "></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid>
+        <ion-row class="ion-align-items-center" *ngFor="let item of users let indexOfelement=index;">
+            <ion-col class="ion-no-padding" size=".5">
+                <div>
+                    <ion-checkbox (ionChange)="checkEvent($event,item.totalBill)" [(ngModel)]="item.checkbox" color="secondary" style="--border-color:#db3f7b; " checked="{{item.checkbox}}"></ion-checkbox>
+                </div>
+            </ion-col>
+            <ion-col>
+                <ion-item style="--inner-padding-end:0;" [routerLink]="['/home/account']">
+                    <div class="vl"></div>
+                    <label class="l">
+                        <h5 style="margin:5px;" [innerHTML]="item.userNumber | home:searchKey"></h5>
+                         <p style="float:left;margin:0px; margin-bottom:10px; color: #787878;">Total Services : <span style="color: #000000;">{{item.totalServices}}</span></p>
+                         <p style="float:right;margin:0px; margin-bottom:10px; color: #787878;">Total bill : <span style="color: #000000;">SR {{item.totalBill}}</span></p>
+                     </label>
+                    <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button *ngIf="masterCheck===false" (click)="checkMaster1()" type="button" color="secondary" fill="clear" expand="block">
+                SELECT ALL
+            </ion-button>
+            <ion-button *ngIf="masterCheck===true" (click)="checkMaster2()" type="button" color="secondary" fill="clear" expand="block">
+                UNSELECT ALL
+            </ion-button>
+        </ion-buttons>
+        <ion-label slot="primary">
+            <p>TOTAL: SR <span>{{total}}</span> </p>
+        </ion-label>
+    </ion-toolbar>
+    <ion-toolbar class="ion-no-padding">
+        <ion-button style="margin:0;" disabled="{{!masterCheck}}" mode="ios" size="large" color="secondary" type="button" expand="full">PAY</ion-button>
+
+    </ion-toolbar>
+</ion-footer>
