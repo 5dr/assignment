@@ -17,9 +17,30 @@ router.post('/users', async(req, res) => {
 })
 
 router.get('/users', async(req, res) => {
-
     try {
         const users = await User.find().limit(parseInt(req.query.limit)).skip(parseInt(req.query.skip))
+        res.status(200).send(users)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+
+})
+
+router.get('/users/:num', async(req, res) => {
+    const num = req.params.num
+    try {
+        const users = await User.find({ number: { "$regex": num, "$options": "i" } })
+        res.status(200).send(users)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+
+})
+
+router.get('/user/:num', async(req, res) => {
+    const num = req.params.num
+    try {
+        const users = await User.find({ number: num })
         res.status(200).send(users)
     } catch (e) {
         res.status(500).send(e)

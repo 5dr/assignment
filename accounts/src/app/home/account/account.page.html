@@ -8,5 +8,12 @@
 </ion-header>
 
 <ion-content>
-
+    <ion-item style="--inner-padding-end:0;">
+        <label class="l">
+        <h5 style="margin:5px;"> {{user.userNumber}}</h5>
+         <p style="float:left;margin:0px; margin-bottom:10px; color: #787878;">Total Services : <span style="color: #000000;">{{user.totalServices }}</span></p>
+         <p style="float:right;margin:0px; margin-bottom:10px; color: #787878;">Total bill : <span style="color: #000000;">SR {{user.totalBill }}</span></p>
+     </label>
+        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
 </ion-content>

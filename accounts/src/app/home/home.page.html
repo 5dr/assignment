@@ -15,7 +15,7 @@
         </ion-buttons>
     </ion-toolbar>
     <ion-toolbar color="primary ">
-        <ion-searchbar [(ngModel)]="searchKey" color="light " showClearButton="never " inputmode="numeric " mode="ios "></ion-searchbar>
+        <ion-searchbar [(ngModel)]="searchKey" (ionChange)="search($event)" color="light " showClearButton="never " inputmode="numeric " mode="ios "></ion-searchbar>
     </ion-toolbar>
 </ion-header>
 
@@ -28,10 +28,10 @@
                 </div>
             </ion-col>
             <ion-col>
-                <ion-item style="--inner-padding-end:0;" [routerLink]="['/home/account']">
+                <ion-item style="--inner-padding-end:0;" (click)="account(item)">
                     <div class="vl"></div>
                     <label class="l">
-                        <h5 style="margin:5px;" [innerHTML]="item.userNumber | home:searchKey"></h5>
+                        <h5 style="margin:5px;" [innerHTML]="item.userNumber| home:searchKey"></h5>
                          <p style="float:left;margin:0px; margin-bottom:10px; color: #787878;">Total Services : <span style="color: #000000;">{{item.totalServices}}</span></p>
                          <p style="float:right;margin:0px; margin-bottom:10px; color: #787878;">Total bill : <span style="color: #000000;">SR {{item.totalBill}}</span></p>
                      </label>
@@ -40,6 +40,11 @@
             </ion-col>
         </ion-row>
     </ion-grid>
+
+    <ion-infinite-scroll threshold="5%" id="infinity-scloll" (ionInfinite)="load($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>
 
 <ion-footer>

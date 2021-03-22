@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HomeService } from './home.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { Router } from '@angular/router'
 
 
 @Component({
@@ -13,56 +14,70 @@ import { IonInfiniteScroll } from '@ionic/angular';
 export class HomePage {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  initLimet=10;
-  initSkip=1;
+  initLimet: string="5";
+  initSkip: string;
+  skip: number = 0;
   total: number = 0;
   url: string = 'assets/icon/time.png';
-  dataUser: any;
+  dataUser: any[];
   users: user[] = [];
   masterCheck:boolean=false;
   searchKey=''
 
-  constructor(private service: HomeService, private http: HttpClient,private cd:ChangeDetectorRef) {}
-
-  ngOnInit() {
-    this.getDataUser();
-  }
+  constructor (private router: Router,private service: HomeService, private http: HttpClient,private cd:ChangeDetectorRef) {}
 
   ngAfterContentChecked(){
     this.cd.detectChanges();
   }
 
-  async getDataUser() {
+  async getDataUser(event?) {
+    this.dataUser=[]
+    this.initSkip=this.skip.toString()
 
-    await this.service.getDataUser().subscribe(
+    console.log(this.initSkip)
+    await this.service.getDataUser("10", this.initSkip).subscribe(
       (res) => {
         console.log(res);
         this.dataUser = res;
+        console.log(this.dataUser);
+        this.dataUser.forEach((element) => {
+          this.users.push({
+            id:element._id,
+            userNumber: element.number,
+            totalServices: element.total_services,
+            totalBill: element.total_bill,
+            checkbox:false
+          });
+        });
+        this.skip=this.users.length
       },
       (err) => {
         console.log(err);
       }
     );
-  }
 
-  convert() {
-    this.dataUser.forEach((element) => {
-      this.users.push({
-        userNumber: element.number,
-        totalServices: element.total_services,
-        totalBill: element.total_bill,
-        checkbox:false
-      });
-    });
-    console.log(this.users);
+    if(event){
+      event.target.complete();
+    }
   }
 
   ionViewWillEnter() {
+    this.skip=0
     this.users=[]
-    this.convert();
     this.total=0
+    this.getDataUser();
+
   }
 
+  public account(user:user){
+    this.router.navigate(['account'],{queryParams:
+      {
+        id:user.id,
+        userNumber:user.userNumber,
+        totalServices:user.totalServices,
+        totalBill:user.totalBill
+      }});
+    }
 
   checkMaster1() {
 
@@ -87,6 +102,7 @@ export class HomePage {
 
   checkEvent(event,totalBill) {
 
+    console.log(event['detail'].checked)
 
     if(event['detail'].checked === true){
       this.total += totalBill
@@ -110,4 +126,49 @@ export class HomePage {
 
     (this.total).toFixed(2)
   }
+
+
+
+
+  async search(event) {
+    var key:string=event.target.value
+    console.log(key)
+
+    if(key.trim().length>0){
+       this.users=[]
+       await this.service.getfilterUser(key).subscribe(
+       (res) => {
+          console.log(res);
+          this.dataUser = res;
+          console.log(this.dataUser);
+          this.dataUser.forEach((element) => {
+              this.users.push({
+              id:element._id,
+              userNumber: element.number,
+              totalServices: element.total_services,
+              totalBill: element.total_bill,
+              checkbox:false
+        });
+      });
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+}else{
+  this.skip=0
+    this.users=[]
+    this.total=0
+  this.getDataUser()
 }
+}
+
+load(event){
+  setTimeout(() => {
+    this.getDataUser(event)
+  }, 500);
+
+}
+
+}
+

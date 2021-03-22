@@ -31,8 +31,13 @@ private extractData(res:Response){
   return body || {}
 }
 
-getDataUser():Observable<any>{
-  return this.http.get('http://localhost:3000/users',httpOptions).pipe(
+getDataUser(lim:string,skip:string):Observable<any>{
+  return this.http.get('http://localhost:3000/users?limit='+lim+'&skip='+skip,httpOptions).pipe(
+    map(this.extractData),catchError(this.handleError))
+
+}
+getfilterUser(num:string):Observable<any>{
+  return this.http.get('http://localhost:3000/users/'+num,httpOptions).pipe(
     map(this.extractData),catchError(this.handleError))
 
 }

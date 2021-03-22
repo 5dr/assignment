@@ -1,4 +1,7 @@
+import { user } from './../user.model';
+import { Router,ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-account',
@@ -6,10 +9,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account.page.scss'],
 })
 export class AccountPage implements OnInit {
-
-  constructor() { }
+  user: any;
+  constructor(public route: ActivatedRoute) {
+    this.route.queryParams.subscribe((params) => {
+      this.user = params
+      console.log(this.user)
+ });
+  }
 
   ngOnInit() {
+
+   }
+
+   ionViewWillEnter() {
+    console.log(this.user)
   }
 
 }

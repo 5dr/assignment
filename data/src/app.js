@@ -1,6 +1,7 @@
 const express = require('express')
 require('./db/mongoose')
 const userRouter = require('./router/user')
+const resturantRouter = require('./router/resturant')
 
 const app = express()
 
@@ -13,5 +14,6 @@ app.use((req, res, next) => {
     next()
 })
 app.use(userRouter)
+app.use(resturantRouter)
 
 module.exports = app
